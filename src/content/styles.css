@@ -1,0 +1,43 @@
+/*
+  Visibility is controlled by data-* flags on documentElement, set from
+  chrome.storage via src/content/content.js. Default: hide Shorts UI.
+*/
+
+/* --- Sidebar (expanded + collapsed mini guide) --- */
+html[data-sntys-hide-sidebar="1"]
+  ytd-guide-entry-renderer:has(a[href^="/shorts"]),
+html[data-sntys-hide-sidebar="1"]
+  ytd-guide-entry-renderer:has(a[href*="youtube.com/shorts"]),
+html[data-sntys-hide-sidebar="1"]
+  ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]),
+html[data-sntys-hide-sidebar="1"]
+  ytd-mini-guide-entry-renderer:has(a[href*="youtube.com/shorts"]) {
+  display: none !important;
+}
+
+/*
+  Home Shorts shelf: newer layouts use ytd-rich-shelf-renderer[is-shorts],
+  older / alternate uses ytd-reel-shelf-renderer.
+*/
+html[data-sntys-hide-reel="1"] ytd-reel-shelf-renderer,
+html[data-sntys-hide-reel="1"] ytd-rich-shelf-renderer[is-shorts] {
+  display: none !important;
+}
+
+/* --- Rich sections whose title is “Shorts” (tagged in JS) --- */
+html[data-sntys-hide-rich="1"] ytd-rich-section-renderer.sntys-shorts-heading {
+  display: none !important;
+}
+
+/* --- Top / chip / tab navigation mentioning Shorts --- */
+html[data-sntys-hide-nav="1"] tp-yt-paper-tab[title="Shorts"],
+html[data-sntys-hide-nav="1"] yt-tab-shape[tab-title="Shorts"],
+html[data-sntys-hide-nav="1"] yt-chip-cloud-chip-renderer:has(a[href*="/shorts"]) {
+  display: none !important;
+}
+
+/* Shorts chip when label or link is detected in JS */
+html[data-sntys-hide-nav="1"] yt-chip-cloud-chip-renderer.sntys-shorts-chip,
+html[data-sntys-hide-nav="1"] ytd-chip-cloud-chip-renderer.sntys-shorts-chip {
+  display: none !important;
+}

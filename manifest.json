@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "Say No to YouTube Shorts",
+  "version": "1.0.1",
+  "description": "Hide YouTube Shorts shelves, sidebar links, and navigation entries on youtube.com.",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "saynotoshorts@sntys.local",
+      "strict_min_version": "121.0"
+    }
+  },
+  "permissions": ["storage"],
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://youtube.com/*"
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "action": {
+    "default_popup": "src/popup/popup.html",
+    "default_title": "Say No to YouTube Shorts",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*", "https://youtube.com/*"],
+      "css": ["src/content/styles.css"],
+      "js": ["src/content/content.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
