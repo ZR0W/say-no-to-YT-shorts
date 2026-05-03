@@ -70,9 +70,33 @@ YouTube updates the site often; if something breaks, selectors in [src/content/s
 ## Shipping a build
 
 1. Bump `"version"` in [manifest.json](manifest.json).
-2. Zip the extension root **contents** (not the parent folder): include `manifest.json`, `icons/`, `src/`, and `README.md` if you like. Exclude `.git`, `scripts/` if you prefer (icons are already generated in `icons/`).
+2. Build a store zip from the repo root (copies only `manifest.json`, `icons/`, and `src/` into `dist/`, then zips with **forward slashes** in entry paths so Mozilla’s linter accepts the archive; see [scripts/package-for-store.ps1](scripts/package-for-store.ps1)).
 
-Submit the zip to the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole). A one-time developer registration fee applies.
+   **Windows (double-click or cmd):**
+
+   ```text
+   scripts\package-for-store.bat
+   ```
+
+   Optional: add `README.md` into the pack:
+
+   ```text
+   scripts\package-for-store.bat -IncludeReadme
+   ```
+
+   **PowerShell (any path to repo):**
+
+   ```powershell
+   powershell -NoProfile -ExecutionPolicy Bypass -File scripts/package-for-store.ps1 -Zip
+   ```
+
+   After a run, the **cmd** window (`.bat`) or **PowerShell** console (`.ps1` alone) stays open with a **press any key** prompt so you can confirm success or read errors. The `.bat` passes `-NoPause` into the script so you only get one prompt. For **CI or unattended scripts**, add `-NoPause` when calling the `.ps1`.
+
+   Outputs under `dist/`: a folder `sntys-store-upload-<timestamp>-TEMP/` and `sntys-store-upload-<timestamp>-TEMP.zip`. Upload the **zip**; delete the temp folder when you are done.
+
+3. Submit the zip to the [Chrome Web Store Developer Dashboard](https://chrome.google.com/webstore/devconsole). A one-time developer registration fee applies.
+
+If you zip by hand instead, zip the extension root **contents** (not the parent folder): `manifest.json`, `icons/`, `src/`, and `README.md` if you like. On Windows, avoid tools that store backslashes in zip entry names (Mozilla AMO rejects those); prefer the script above.
 
 ## Icons
 
