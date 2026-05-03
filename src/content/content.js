@@ -11,6 +11,20 @@ const DEFAULT_SETTINGS = {
 let currentSettings = { ...DEFAULT_SETTINGS };
 let debounceScheduled = false;
 
+/** True for Shorts *feed* URLs, not individual /shorts/{id} watch URLs. */
+function isShortsFeedHref(href) {
+  if (!href || href.startsWith("javascript:")) return false;
+  try {
+    const u = new URL(href, location.origin || "https://www.youtube.com");
+    const parts = u.pathname.split("/").filter(Boolean);
+    if (parts[0] === "feed" && parts[1] === "shorts") return true;
+    if (parts[0] === "shorts" && parts.length === 1) return true;
+    return false;
+  } catch {
+    return false;
+  }
+}
+
 function isDebug() {
   try {
     return sessionStorage.getItem("sntys_debug") === "1";
@@ -150,19 +164,57 @@ function markShortsChips() {
   });
 }
 
+/** Sidebar: list rows, mini-guide icons, and HOME-adjacent chip/tab controls in the guide column. */
+function applySidebarShortsHides(hideSidebar) {
+  function guideEntryIsShorts(entry) {
+    const title = entry.querySelector(".title");
+    if (title && title.textContent.trim().toLowerCase() === "shorts") return true;
+    for (const a of entry.querySelectorAll("a[href]")) {
+      if (isShortsFeedHref(a.getAttribute("href"))) return true;
+    }
+    const tab = entry.querySelector('button[role="tab"]');
+    if (tab) {
+      const txt = tab.textContent.trim().toLowerCase();
+      const al = (tab.getAttribute("aria-label") || "").toLowerCase();
+      if (txt === "shorts" || al.includes("shorts")) return true;
+    }
+    return false;
+  }
+
+  document.querySelectorAll("ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer").forEach((entry) => {
+    setForcedHidden(entry, !!(hideSidebar && guideEntryIsShorts(entry)));
+  });
+
+  document
+    .querySelectorAll("#guide-inner-content, tp-yt-app-drawer#guide, ytd-guide-renderer")
+    .forEach((region) => {
+      region.querySelectorAll("yt-chip-cloud-chip-renderer, ytd-chip-cloud-chip-renderer").forEach((chip) => {
+        let shorts = false;
+        chip.querySelectorAll("a[href]").forEach((a) => {
+          if (isShortsFeedHref(a.getAttribute("href"))) shorts = true;
+        });
+        const tab = chip.querySelector('button[role="tab"]');
+        if (tab) {
+          const txt = tab.textContent.trim().toLowerCase();
+          const al = (tab.getAttribute("aria-label") || "").toLowerCase();
+          if (txt === "shorts" || al.includes("shorts")) shorts = true;
+        }
+        const label = chip.querySelector("yt-formatted-string");
+        if (label && label.textContent.trim().toLowerCase() === "shorts") shorts = true;
+        const chipDiv = chip.querySelector(".ytChipShapeChip div");
+        if (chipDiv && chipDiv.textContent.trim().toLowerCase() === "shorts") shorts = true;
+        setForcedHidden(chip, !!(hideSidebar && shorts));
+      });
+    });
+}
+
 function applyForceHides() {
   const hideSidebar = currentSettings.hideSidebarShorts;
   const hideReel = currentSettings.hideReelShelf;
   const hideRich = currentSettings.hideRichShortsSections;
   const hideNav = currentSettings.hideNavigationShorts;
 
-  const shortsHref =
-    'a[href^="/shorts"], a[href*="/shorts?"], a[href*="youtube.com/shorts"]';
-
-  document.querySelectorAll("ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer").forEach((entry) => {
-    const shortsLink = entry.querySelector(shortsHref);
-    setForcedHidden(entry, !!(hideSidebar && shortsLink));
-  });
+  applySidebarShortsHides(hideSidebar);
 
   document.querySelectorAll("ytd-reel-shelf-renderer").forEach((el) => {
     setForcedHidden(el, hideReel);

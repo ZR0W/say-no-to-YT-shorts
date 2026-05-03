@@ -33,7 +33,7 @@ Click the toolbar icon to open the popup. Each checkbox controls one kind of Sho
 
 | Setting | Effect |
 |--------|--------|
-| Hide sidebar Shorts link | Removes the Shorts entry in the left guide (expanded and mini guide). |
+| Hide sidebar Shorts link | Removes the Shorts entry in the left guide: list rows, mini-guide icons, and HOME-adjacent chip/tab controls (e.g. Shorts feed tab). |
 | Hide Shorts reel / shelf rows | Hides `ytd-rich-shelf-renderer[is-shorts]` (current home Shorts row) and legacy `ytd-reel-shelf-renderer`. |
 | Hide sections titled “Shorts” | Hides rich sections whose heading is Shorts (SPA-friendly; uses a class applied after DOM checks). |
 | Hide Shorts tabs & filter chips | Hides Shorts tabs/titles where supported, chips linking to Shorts, and chips labeled Shorts when detected in the DOM. |

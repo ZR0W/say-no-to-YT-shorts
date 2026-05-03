@@ -73,7 +73,7 @@ Flat keys (booleans; default **true** = hide):
 
 | Key | Meaning |
 |-----|---------|
-| `hideSidebarShorts` | Sidebar + mini-guide entries linking to Shorts |
+| `hideSidebarShorts` | Sidebar + mini-guide entries, `/feed/shorts`, and guide-column chip/tab controls (HOME \| Shorts) linking or labeled as Shorts |
 | `hideReelShelf` | `ytd-reel-shelf-renderer` and `ytd-rich-shelf-renderer[is-shorts]` (newer home Shorts row) |
 | `hideRichShortsSections` | `ytd-rich-section-renderer` whose title reads as Shorts |
 | `hideNavigationShorts` | Shorts tabs, href-based chips, text-tagged chips |

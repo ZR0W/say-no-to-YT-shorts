@@ -11,7 +11,21 @@ html[data-sntys-hide-sidebar="1"]
 html[data-sntys-hide-sidebar="1"]
   ytd-mini-guide-entry-renderer:has(a[href^="/shorts"]),
 html[data-sntys-hide-sidebar="1"]
-  ytd-mini-guide-entry-renderer:has(a[href*="youtube.com/shorts"]) {
+  ytd-mini-guide-entry-renderer:has(a[href*="youtube.com/shorts"]),
+html[data-sntys-hide-sidebar="1"]
+  ytd-guide-entry-renderer:has(a[href*="/feed/shorts"]),
+html[data-sntys-hide-sidebar="1"]
+  ytd-mini-guide-entry-renderer:has(a[href*="/feed/shorts"]) {
+  display: none !important;
+}
+
+/* Chip/tab row inside the guide column (e.g. HOME | Shorts) — class set in content.js */
+html[data-sntys-hide-sidebar="1"] #guide-inner-content yt-chip-cloud-chip-renderer.sntys-force-hide,
+html[data-sntys-hide-sidebar="1"] tp-yt-app-drawer#guide yt-chip-cloud-chip-renderer.sntys-force-hide,
+html[data-sntys-hide-sidebar="1"] ytd-guide-renderer yt-chip-cloud-chip-renderer.sntys-force-hide,
+html[data-sntys-hide-sidebar="1"] #guide-inner-content ytd-chip-cloud-chip-renderer.sntys-force-hide,
+html[data-sntys-hide-sidebar="1"] tp-yt-app-drawer#guide ytd-chip-cloud-chip-renderer.sntys-force-hide,
+html[data-sntys-hide-sidebar="1"] ytd-guide-renderer ytd-chip-cloud-chip-renderer.sntys-force-hide {
   display: none !important;
 }
 

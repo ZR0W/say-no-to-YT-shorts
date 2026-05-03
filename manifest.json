@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Say No to YouTube Shorts",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Hide YouTube Shorts shelves, sidebar links, and navigation entries on youtube.com.",
   "browser_specific_settings": {
     "gecko": {
