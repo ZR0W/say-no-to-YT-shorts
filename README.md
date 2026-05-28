@@ -1,6 +1,6 @@
 # Say No to YouTube Shorts
 
-A [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) browser extension for **desktop Chrome, Edge, Firefox**, and other browsers that load unpacked or store packages. It reduces YouTube Shorts UI on [https://www.youtube.com](https://www.youtube.com): sidebar link, reel/shelf rows, “Shorts”-titled sections, and Shorts-related tabs and filter chips.
+A [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) browser extension for **desktop Chrome, Edge, Firefox, and Firefox for Android**, and other browsers that load unpacked or store packages. It reduces YouTube Shorts UI on [https://www.youtube.com](https://www.youtube.com) and [https://m.youtube.com](https://m.youtube.com): sidebar link, reel/shelf rows, “Shorts”-titled sections, and Shorts-related tabs and filter chips.
 
 **Maintainers & AI assistants:** See [AGENTS.md](AGENTS.md) for repository layout, settings schema, how to test in Chrome vs Firefox, and constraints when changing behavior.
 
@@ -42,11 +42,17 @@ Preferences are stored with **`storage.sync`** (`browser.storage.sync` / `chrome
 
 ## Mobile (Android)
 
-- **Chrome for Android** does not support installing arbitrary extensions from the Chrome Web Store the way desktop Chrome does, so this extension does not apply there today.
-- **Firefox for Android** supports a curated set of extensions; shipping there would be a separate packaging and review path.
-- Some Chromium-based browsers (e.g. Kiwi) allow loading extensions manually for advanced users only.
-
-The primary supported surface is **desktop** `https://www.youtube.com/*` as declared in `manifest.json`.
+- **Firefox for Android** (version 121+) is fully supported. Install from
+  [addons.mozilla.org](https://addons.mozilla.org/) — search for
+  **"Say No to YouTube Shorts"** in Firefox for Android's Add-ons panel
+  (⋮ → Add-ons). The extension runs on both `youtube.com` and `m.youtube.com`.
+  The toolbar popup appears in the address bar; tap it to toggle settings.
+- **Chrome for Android** does not support loading arbitrary extensions from
+  the Chrome Web Store the way desktop Chrome does, so this extension does not
+  apply there.
+- **Kiwi Browser** (Android, Chromium-based) can sideload unpacked extensions
+  for advanced users — load unpacked via its extensions page the same way as
+  desktop Chrome.
 
 ## Privacy
 

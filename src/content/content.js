@@ -74,7 +74,12 @@ function ensureFallbackStyle() {
     ytd-rich-shelf-renderer[is-shorts].sntys-force-hide,
     ytd-rich-section-renderer.sntys-shorts-heading.sntys-force-hide,
     yt-chip-cloud-chip-renderer.sntys-force-hide,
-    ytd-chip-cloud-chip-renderer.sntys-force-hide {
+    ytd-chip-cloud-chip-renderer.sntys-force-hide,
+    ytm-reel-shelf-renderer.sntys-force-hide,
+    ytm-pivot-bar-item-renderer.sntys-force-hide,
+    ytm-compact-link-renderer.sntys-force-hide,
+    ytm-shorts-lockup-view-model.sntys-force-hide,
+    ytm-chip-cloud-chip-renderer.sntys-force-hide {
       display: none !important;
     }
   `;
@@ -236,6 +241,8 @@ function applyForceHides() {
       setForcedHidden(chip, hideNav);
     });
 
+  applyMobileForceHides();
+
   if (isDebug()) {
     dbg(
       "counts",
@@ -249,6 +256,53 @@ function applyForceHides() {
       document.querySelectorAll("ytd-mini-guide-entry-renderer").length,
       "miniGuide_hidden:",
       document.querySelectorAll("ytd-mini-guide-entry-renderer.sntys-force-hide").length
+    );
+  }
+}
+
+function applyMobileForceHides() {
+  const hideReel = currentSettings.hideReelShelf;
+  const hideNav = currentSettings.hideNavigationShorts;
+  const hideSidebar = currentSettings.hideSidebarShorts;
+
+  document.querySelectorAll("ytm-pivot-bar-item-renderer").forEach((el) => {
+    const link = el.querySelector('a[href="/shorts"], a[href*="/feed/shorts"]');
+    const ariaEl = el.querySelector("[aria-label]");
+    const isShorts =
+      link ||
+      (ariaEl &&
+        ariaEl.getAttribute("aria-label").toLowerCase().includes("shorts"));
+    setForcedHidden(el, !!(hideNav && isShorts));
+  });
+
+  document.querySelectorAll("ytm-reel-shelf-renderer").forEach((el) => {
+    setForcedHidden(el, hideReel);
+  });
+
+  document.querySelectorAll("ytm-shorts-lockup-view-model").forEach((el) => {
+    setForcedHidden(el, hideReel);
+  });
+
+  document.querySelectorAll("ytm-compact-link-renderer").forEach((el) => {
+    const link = el.querySelector('a[href="/shorts"], a[href*="/feed/shorts"]');
+    const isShorts =
+      link || el.textContent.trim().toLowerCase() === "shorts";
+    setForcedHidden(el, !!(hideSidebar && isShorts));
+  });
+
+  document
+    .querySelectorAll("ytm-chip-cloud-chip-renderer.sntys-shorts-chip")
+    .forEach((chip) => {
+      setForcedHidden(chip, hideNav);
+    });
+
+  if (isDebug()) {
+    dbg(
+      "mobile counts",
+      "reelShelf:", document.querySelectorAll("ytm-reel-shelf-renderer").length,
+      "pivotBarItems:", document.querySelectorAll("ytm-pivot-bar-item-renderer").length,
+      "sidebarLinks:", document.querySelectorAll("ytm-compact-link-renderer").length,
+      "shortsCards:", document.querySelectorAll("ytm-shorts-lockup-view-model").length
     );
   }
 }

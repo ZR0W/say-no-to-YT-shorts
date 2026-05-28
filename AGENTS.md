@@ -4,7 +4,7 @@ This document orients anyone (including automated coding agents) who opens this 
 
 ## Purpose
 
-**Say No to YouTube Shorts** is a Web Extension that reduces Shorts-related UI on **desktop** `https://www.youtube.com/*` and `https://youtube.com/*` (with or without `www`): sidebar Shorts entry, reel/shelf rows, sections titled “Shorts”, and Shorts tabs/chips. It does **not** change YouTube servers; it only adjusts the DOM/CSS in the user’s tab via a **Manifest V3** content script and bundled CSS.
+**Say No to YouTube Shorts** is a Web Extension that reduces Shorts-related UI on `https://www.youtube.com/*`, `https://youtube.com/*`, and **mobile** `https://m.youtube.com/*`: sidebar Shorts entry, reel/shelf rows, sections titled “Shorts”, Shorts tabs/chips, bottom nav Shorts tab, and individual Shorts cards. It does **not** change YouTube servers; it only adjusts the DOM/CSS in the user’s tab via a **Manifest V3** content script and bundled CSS.
 
 Human-facing overview: [README.md](README.md). Chrome Web Store–oriented notes: [docs/store-listing.md](docs/store-listing.md).
 
@@ -14,7 +14,7 @@ Human-facing overview: [README.md](README.md). Chrome Web Store–oriented notes
 |------|------|
 | [manifest.json](manifest.json) | MV3 manifest: permissions, matches, content scripts, action popup, icons, Firefox `browser_specific_settings`. |
 | [icons/](icons/) | Toolbar/store icons (`icon16.png`, `icon48.png`, `icon128.png`). Regenerate with [scripts/generate-icons.ps1](scripts/generate-icons.ps1). |
-| [src/content/content.js](src/content/content.js) | Loads settings, sets `data-sntys-*` on `<html>`, applies `sntys-force-hide`, injects fallback `<style>`, marks DOM for JS-only rules, `MutationObserver` + debounced refresh, listens for storage changes (any storage area). |
+| [src/content/content.js](src/content/content.js) | Loads settings, sets `data-sntys-*` on `<html>`, applies `sntys-force-hide`, injects fallback `<style>`, marks DOM for JS-only rules, `MutationObserver` + debounced refresh, listens for storage changes (any storage area). `applyMobileForceHides()` handles `ytm-*` elements on `m.youtube.com`. |
 | [src/content/styles.css](src/content/styles.css) | Static CSS keyed off `documentElement.dataset`; hides sidebar/reel/tabs where selectors allow. |
 | [src/popup/popup.html](src/popup/popup.html) | Toolbar popup UI (checkboxes). |
 | [src/popup/popup.js](src/popup/popup.js) | Reads/writes settings to `storage.sync`. |
@@ -48,7 +48,7 @@ flowchart LR
 
 Use this order before changing selectors:
 
-1. **Confirm the URL pattern** — The extension only runs on `https://www.youtube.com/*` and `https://youtube.com/*`. It does **not** run on `music.youtube.com`, embedded players on other sites, or non-HTTPS URLs.
+1. **Confirm the URL pattern** — The extension runs on `https://www.youtube.com/*`, `https://youtube.com/*`, and `https://m.youtube.com/*`. It does **not** run on `music.youtube.com`, embedded players on other sites, or non-HTTPS URLs. On mobile (`m.youtube.com`), DOM elements use the `ytm-*` prefix — use the same `sntys_debug` flag to inspect mobile counts.
 
 2. **Reload the extension** after pulling code changes (Chromium: extensions page → Reload; Firefox: remove temporary add-on and load `manifest.json` again, or use “Reload” if shown).
 
@@ -65,7 +65,7 @@ Use this order before changing selectors:
 
 5. **Inspect for errors** — Red errors mentioning `storage`, `permissions`, or the script path mean the extension context failed before hid logic runs.
 
-6. **DOM drift** — If attributes are `"1"` but Shorts remain visible, YouTube may have renamed nodes (e.g. home Shorts moved from `ytd-reel-shelf-renderer` to `ytd-rich-shelf-renderer[is-shorts]`). Capture **Inspect** → outer HTML for the Shorts block (or the left nav Shorts row) and update selectors in [content.js](src/content/content.js) / [styles.css](src/content/styles.css). A captured page dump may live under `docs/` for comparison (large files—grep for `is-shorts`, `shorts`).
+6. **DOM drift** — If attributes are `"1"` but Shorts remain visible, YouTube may have renamed nodes. Desktop uses `ytd-*` Polymer elements; mobile (`m.youtube.com`) uses `ytm-*` elements (e.g. `ytm-reel-shelf-renderer`, `ytm-pivot-bar-item-renderer`, `ytm-compact-link-renderer`, `ytm-shorts-lockup-view-model`). Capture **Inspect** → outer HTML for the Shorts block and update selectors in [content.js](src/content/content.js) / [styles.css](src/content/styles.css). A captured page dump may live under `docs/` for comparison (large files—grep for `is-shorts`, `shorts`).
 
 ## Settings schema (`chrome.storage.sync` / `browser.storage.sync`)
 
@@ -97,7 +97,25 @@ Scripts use **`const ext = globalThis.browser ?? globalThis.chrome`** then **`ex
 1. `about:debugging#/runtime/this-firefox` → **Load Temporary Add-on** → choose `manifest.json` in this repo.
 2. Same YouTube smoke test. **Note:** Temporary add-ons are removed when Firefox closes unless you package/sign for permanent install ([addons.mozilla.org](https://addons.mozilla.org/) flow).
 
-Firefox includes `browser_specific_settings.gecko` in [manifest.json](manifest.json) for packaging; the `id` may be replaced before AMO submission if you use an add-on–generated ID.
+Firefox includes `browser_specific_settings.gecko` in [manifest.json](manifest.json) for packaging. The `id` is `saynotoshorts@sntys.app` — do not change this after the first AMO submission, as AMO ties updates to the registered ID.
+
+### Firefox for Android
+
+**Permanent install (AMO listing):**
+1. Open Firefox for Android → ⋮ → Add-ons → search **"Say No to YouTube Shorts"**.
+2. Install, then open `m.youtube.com` and verify Shorts elements are hidden.
+
+**Temporary install (ADB remote debugging):**
+1. Enable USB debugging on the Android device.
+2. In Firefox for Android: Settings → About Firefox → tap version 5× → Settings → Remote debugging via USB.
+3. In Firefox desktop: `about:debugging` → This Network Location → connect to device.
+4. Load the temporary add-on from `manifest.json` on the connected device.
+
+**Smoke test for mobile (`m.youtube.com`):**
+- Home feed: Shorts shelf row hidden.
+- Bottom navigation: Shorts tab hidden.
+- Hamburger (☰) menu: Shorts link hidden.
+- Toggle each popup option off → confirm corresponding element reappears on reload.
 
 ## When YouTube breaks the extension
 
@@ -124,7 +142,8 @@ Namespace new classes with the `sntys-` prefix to avoid collisions.
 ## Product / scope reminders
 
 - **Primary:** Desktop web at `https://www.youtube.com/*` and `https://youtube.com/*`.
-- **Android Chrome:** Not a Web Extension install target like desktop.
-- **Firefox Android:** Separate, curated listing process; do not assume this repo ships there without extra work.
+- **Firefox for Android:** Supported via AMO listing. Mobile YouTube (`m.youtube.com`) uses `ytm-*` Polymer elements; `applyMobileForceHides()` in [content.js](src/content/content.js) and the mobile CSS block in [styles.css](src/content/styles.css) handle these.
+- **Android Chrome:** Does not support loading arbitrary extensions.
+- **Kiwi Browser:** Supports sideloading unpacked extensions; Chrome code path applies.
 
 Original brainstorming file: [planning.md](planning.md) (historical context only).

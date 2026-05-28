@@ -55,3 +55,38 @@ html[data-sntys-hide-nav="1"] yt-chip-cloud-chip-renderer.sntys-shorts-chip,
 html[data-sntys-hide-nav="1"] ytd-chip-cloud-chip-renderer.sntys-shorts-chip {
   display: none !important;
 }
+
+/* ── Mobile YouTube (m.youtube.com) — ytm-* elements ── */
+
+/* Bottom navigation bar: Shorts tab */
+html[data-sntys-hide-nav="1"]
+  ytm-pivot-bar-item-renderer:has(a[href="/shorts"]),
+html[data-sntys-hide-nav="1"]
+  ytm-pivot-bar-item-renderer:has(a[href*="/feed/shorts"]),
+html[data-sntys-hide-nav="1"]
+  ytm-pivot-bar-item-renderer:has([aria-label*="Shorts" i]) {
+  display: none !important;
+}
+
+/* Home feed: Shorts shelf row */
+html[data-sntys-hide-reel="1"] ytm-reel-shelf-renderer {
+  display: none !important;
+}
+
+/* Individual Shorts thumbnail cards */
+html[data-sntys-hide-reel="1"] ytm-shorts-lockup-view-model {
+  display: none !important;
+}
+
+/* Sidebar / hamburger menu: Shorts link */
+html[data-sntys-hide-sidebar="1"]
+  ytm-compact-link-renderer:has(a[href="/shorts"]),
+html[data-sntys-hide-sidebar="1"]
+  ytm-compact-link-renderer:has(a[href*="/feed/shorts"]) {
+  display: none !important;
+}
+
+/* Mobile Shorts chip when tagged in JS */
+html[data-sntys-hide-nav="1"] ytm-chip-cloud-chip-renderer.sntys-shorts-chip {
+  display: none !important;
+}
