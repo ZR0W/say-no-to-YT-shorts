@@ -7,25 +7,32 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <main class="panel">
-      <h1 class="title">Shorts visibility</h1>
-      <p class="hint">Turn off an option to show that Shorts UI again.</p>
+    <main class=”panel”>
+      <h1 class=”title”>YouTube visibility</h1>
+      <p class=”hint”>Turn off an option to show that UI again.</p>
 
-      <label class="row">
-        <input type="checkbox" id="hideSidebarShorts" />
+      <p class=”section-label”>Shorts</p>
+      <label class=”row”>
+        <input type=”checkbox” id=”hideSidebarShorts” />
         <span>Hide sidebar Shorts link</span>
       </label>
-      <label class="row">
-        <input type="checkbox" id="hideReelShelf" />
+      <label class=”row”>
+        <input type=”checkbox” id=”hideReelShelf” />
         <span>Hide Shorts reel / shelf rows</span>
       </label>
-      <label class="row">
-        <input type="checkbox" id="hideRichShortsSections" />
+      <label class=”row”>
+        <input type=”checkbox” id=”hideRichShortsSections” />
         <span>Hide sections titled “Shorts”</span>
       </label>
-      <label class="row">
-        <input type="checkbox" id="hideNavigationShorts" />
+      <label class=”row”>
+        <input type=”checkbox” id=”hideNavigationShorts” />
         <span>Hide Shorts tabs &amp; filter chips</span>
+      </label>
+
+      <p class=”section-label”>Playables</p>
+      <label class=”row”>
+        <input type=”checkbox” id=”hidePlayables” />
+        <span>Hide Playables shelf &amp; games</span>
       </label>
     </main>
     <script src="popup.js"></script>

@@ -14,7 +14,7 @@ Human-facing overview: [README.md](README.md). Chrome Web Store–oriented notes
 |------|------|
 | [manifest.json](manifest.json) | MV3 manifest: permissions, matches, content scripts, action popup, icons, Firefox `browser_specific_settings`. |
 | [icons/](icons/) | Toolbar/store icons (`icon16.png`, `icon48.png`, `icon128.png`). Regenerate with [scripts/generate-icons.ps1](scripts/generate-icons.ps1). |
-| [src/content/content.js](src/content/content.js) | Loads settings, sets `data-sntys-*` on `<html>`, applies `sntys-force-hide`, injects fallback `<style>`, marks DOM for JS-only rules, `MutationObserver` + debounced refresh, listens for storage changes (any storage area). `applyMobileForceHides()` handles `ytm-*` elements on `m.youtube.com`. |
+| [src/content/content.js](src/content/content.js) | Loads settings, sets `data-sntys-*` on `<html>`, applies `sntys-force-hide`, injects fallback `<style>`, marks DOM for JS-only rules, `MutationObserver` + debounced refresh, listens for storage changes (any storage area). `applyMobileForceHides()` handles `ytm-*` elements on `m.youtube.com`. `applyPlayablesHides()` handles `ytd-rich-shelf-renderer[is-playables]` and game card elements. |
 | [src/content/styles.css](src/content/styles.css) | Static CSS keyed off `documentElement.dataset`; hides sidebar/reel/tabs where selectors allow. |
 | [src/popup/popup.html](src/popup/popup.html) | Toolbar popup UI (checkboxes). |
 | [src/popup/popup.js](src/popup/popup.js) | Reads/writes settings to `storage.sync`. |
@@ -77,6 +77,7 @@ Flat keys (booleans; default **true** = hide):
 | `hideReelShelf` | `ytd-reel-shelf-renderer` and `ytd-rich-shelf-renderer[is-shorts]` (newer home Shorts row) |
 | `hideRichShortsSections` | `ytd-rich-section-renderer` whose title reads as Shorts |
 | `hideNavigationShorts` | Shorts tabs, href-based chips, text-tagged chips |
+| `hidePlayables` | `ytd-rich-shelf-renderer[is-playables]`, sidebar guide entries with `/playables` href, game card elements (`ytd-mini-game-card-view-model`, `ytd-game-card-renderer`), search result shelves |
 
 Changing any key must keep [content.js](src/content/content.js), [styles.css](src/content/styles.css), [popup.html](src/popup/popup.html), and [popup.js](src/popup/popup.js) in sync (same keys, defaults).
 

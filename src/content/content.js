@@ -6,6 +6,7 @@ const DEFAULT_SETTINGS = {
   hideReelShelf: true,
   hideRichShortsSections: true,
   hideNavigationShorts: true,
+  hidePlayables: true,
 };
 
 let currentSettings = { ...DEFAULT_SETTINGS };
@@ -79,7 +80,11 @@ function ensureFallbackStyle() {
     ytm-pivot-bar-item-renderer.sntys-force-hide,
     ytm-compact-link-renderer.sntys-force-hide,
     ytm-shorts-lockup-view-model.sntys-force-hide,
-    ytm-chip-cloud-chip-renderer.sntys-force-hide {
+    ytm-chip-cloud-chip-renderer.sntys-force-hide,
+    ytd-rich-shelf-renderer[is-playables].sntys-force-hide,
+    ytd-mini-game-card-view-model.sntys-force-hide,
+    mini-game-card-view-model.sntys-force-hide,
+    ytd-game-card-renderer.sntys-force-hide {
       display: none !important;
     }
   `;
@@ -92,6 +97,7 @@ function applySettingsToDom(settings) {
   root.dataset.sntysHideReel = settings.hideReelShelf ? "1" : "0";
   root.dataset.sntysHideRich = settings.hideRichShortsSections ? "1" : "0";
   root.dataset.sntysHideNav = settings.hideNavigationShorts ? "1" : "0";
+  root.dataset.sntysHidePlayables = settings.hidePlayables ? "1" : "0";
   dbg("dataset flags", {
     sidebar: root.dataset.sntysHideSidebar,
     reel: root.dataset.sntysHideReel,
@@ -242,6 +248,7 @@ function applyForceHides() {
     });
 
   applyMobileForceHides();
+  applyPlayablesHides();
 
   if (isDebug()) {
     dbg(
@@ -258,6 +265,31 @@ function applyForceHides() {
       document.querySelectorAll("ytd-mini-guide-entry-renderer.sntys-force-hide").length
     );
   }
+}
+
+function applyPlayablesHides() {
+  const hide = currentSettings.hidePlayables;
+
+  document
+    .querySelectorAll("ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer")
+    .forEach((el) => {
+      const isPlayables = Array.from(el.querySelectorAll("a[href]")).some((a) =>
+        a.getAttribute("href").startsWith("/playables")
+      );
+      if (isPlayables) setForcedHidden(el, hide);
+    });
+
+  document.querySelectorAll("ytd-rich-shelf-renderer[is-playables]").forEach((el) => {
+    setForcedHidden(el, hide);
+  });
+
+  document
+    .querySelectorAll(
+      "ytd-mini-game-card-view-model, mini-game-card-view-model, ytd-game-card-renderer"
+    )
+    .forEach((el) => {
+      setForcedHidden(el, hide);
+    });
 }
 
 function applyMobileForceHides() {

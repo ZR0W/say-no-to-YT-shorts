@@ -5,6 +5,7 @@ const KEYS = [
   "hideReelShelf",
   "hideRichShortsSections",
   "hideNavigationShorts",
+  "hidePlayables",
 ];
 
 const DEFAULTS = {
@@ -12,6 +13,7 @@ const DEFAULTS = {
   hideReelShelf: true,
   hideRichShortsSections: true,
   hideNavigationShorts: true,
+  hidePlayables: true,
 };
 
 async function loadAndBind() {

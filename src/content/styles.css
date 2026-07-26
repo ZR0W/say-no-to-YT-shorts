@@ -90,3 +90,38 @@ html[data-sntys-hide-sidebar="1"]
 html[data-sntys-hide-nav="1"] ytm-chip-cloud-chip-renderer.sntys-shorts-chip {
   display: none !important;
 }
+
+/* ── YouTube Playables ── */
+
+/* Sidebar navigation (full + mini guide) */
+html[data-sntys-hide-playables="1"]
+  ytd-guide-entry-renderer:has(a[href^="/playables"]),
+html[data-sntys-hide-playables="1"]
+  ytd-mini-guide-entry-renderer:has(a[href^="/playables"]) {
+  display: none !important;
+}
+
+/* Homepage shelf — attribute-based (most stable) */
+html[data-sntys-hide-playables="1"] ytd-rich-shelf-renderer[is-playables],
+html[data-sntys-hide-playables="1"] ytd-rich-section-renderer:has([is-playables]) {
+  display: none !important;
+}
+
+/* Homepage shelf — href-based fallback */
+html[data-sntys-hide-playables="1"]
+  ytd-rich-section-renderer:has(a[href="/playables"]) {
+  display: none !important;
+}
+
+/* Individual game card elements */
+html[data-sntys-hide-playables="1"] ytd-mini-game-card-view-model,
+html[data-sntys-hide-playables="1"] mini-game-card-view-model,
+html[data-sntys-hide-playables="1"] ytd-game-card-renderer {
+  display: none !important;
+}
+
+/* Search results page shelf */
+html[data-sntys-hide-playables="1"]
+  ytd-shelf-renderer:has(a[href^="/playables"]) {
+  display: none !important;
+}
