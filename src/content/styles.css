@@ -109,7 +109,7 @@ html[data-sntys-hide-playables="1"] ytd-rich-section-renderer:has([is-playables]
 
 /* Homepage shelf — href-based fallback */
 html[data-sntys-hide-playables="1"]
-  ytd-rich-section-renderer:has(a[href="/playables"]) {
+  ytd-rich-section-renderer:has(a[href^="/playables"]) {
   display: none !important;
 }
 

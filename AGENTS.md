@@ -77,7 +77,7 @@ Flat keys (booleans; default **true** = hide):
 | `hideReelShelf` | `ytd-reel-shelf-renderer` and `ytd-rich-shelf-renderer[is-shorts]` (newer home Shorts row) |
 | `hideRichShortsSections` | `ytd-rich-section-renderer` whose title reads as Shorts |
 | `hideNavigationShorts` | Shorts tabs, href-based chips, text-tagged chips |
-| `hidePlayables` | `ytd-rich-shelf-renderer[is-playables]`, sidebar guide entries with `/playables` href, game card elements (`ytd-mini-game-card-view-model`, `ytd-game-card-renderer`), search result shelves |
+| `hidePlayables` | `ytd-rich-shelf-renderer[is-playables]` + parent `ytd-rich-section-renderer`, sidebar guide entries with `/playables` href, game card elements (`ytd-mini-game-card-view-model`, `ytd-game-card-renderer`), search result shelves. **Note:** YouTube Playables has a staged regional rollout — if the shelf is absent from the page the setting has no visible effect. Use `sntys_debug` to confirm `data-sntys-hide-playables="1"` is set and check the `playables counts` log line; all-zeros is expected when Playables is unavailable on the account. |
 
 Changing any key must keep [content.js](src/content/content.js), [styles.css](src/content/styles.css), [popup.html](src/popup/popup.html), and [popup.js](src/popup/popup.js) in sync (same keys, defaults).
 

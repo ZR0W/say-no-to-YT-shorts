@@ -82,6 +82,7 @@ function ensureFallbackStyle() {
     ytm-shorts-lockup-view-model.sntys-force-hide,
     ytm-chip-cloud-chip-renderer.sntys-force-hide,
     ytd-rich-shelf-renderer[is-playables].sntys-force-hide,
+    ytd-rich-section-renderer.sntys-force-hide,
     ytd-mini-game-card-view-model.sntys-force-hide,
     mini-game-card-view-model.sntys-force-hide,
     ytd-game-card-renderer.sntys-force-hide {
@@ -103,6 +104,7 @@ function applySettingsToDom(settings) {
     reel: root.dataset.sntysHideReel,
     rich: root.dataset.sntysHideRich,
     nav: root.dataset.sntysHideNav,
+    playables: root.dataset.sntysHidePlayables,
   });
 }
 
@@ -283,6 +285,11 @@ function applyPlayablesHides() {
     setForcedHidden(el, hide);
   });
 
+  // Outer section wrapper — avoids empty gap when inner shelf is hidden
+  document.querySelectorAll("ytd-rich-section-renderer:has([is-playables])").forEach((el) => {
+    setForcedHidden(el, hide);
+  });
+
   document
     .querySelectorAll(
       "ytd-mini-game-card-view-model, mini-game-card-view-model, ytd-game-card-renderer"
@@ -290,6 +297,18 @@ function applyPlayablesHides() {
     .forEach((el) => {
       setForcedHidden(el, hide);
     });
+
+  if (isDebug()) {
+    dbg(
+      "playables counts",
+      "shelf[is-playables]:", document.querySelectorAll("ytd-rich-shelf-renderer[is-playables]").length,
+      "outerSection:", document.querySelectorAll("ytd-rich-section-renderer:has([is-playables])").length,
+      "gameCards:", document.querySelectorAll("ytd-mini-game-card-view-model, ytd-game-card-renderer").length,
+      "sidebarLinks_hidden:", document.querySelectorAll(
+        "ytd-guide-entry-renderer.sntys-force-hide, ytd-mini-guide-entry-renderer.sntys-force-hide"
+      ).length
+    );
+  }
 }
 
 function applyMobileForceHides() {
