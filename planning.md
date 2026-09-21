@@ -1,3 +1,15 @@
+## 2026 update — Firefox for Android
+
+The original mobile question ("can this work on Android?") is now answered and implemented.
+
+Firefox for Android (v121+) supports all AMO-listed extensions. Shipping required:
+- `manifest.json`: added `m.youtube.com` to `host_permissions` + `content_scripts.matches`; updated Gecko `id` to `saynotoshorts@sntys.app`; bumped version to 1.1.0
+- `src/content/styles.css`: added mobile CSS block targeting `ytm-*` elements (bottom nav, reel shelf, sidebar link, Shorts cards)
+- `src/content/content.js`: added `applyMobileForceHides()` with JS force-hide logic for `ytm-*` elements; extended `ensureFallbackStyle()` to cover mobile selectors
+- AMO submission required for permanent install — see `docs/store-listing.md`
+
+---
+
 plan a chrome extension project with me
 my goal is to make a browser extension that modifies what i see on youtube.com
 

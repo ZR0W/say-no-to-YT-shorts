@@ -1,6 +1,6 @@
 # Say No to YouTube Shorts
 
-A [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) browser extension for **desktop Chrome, Edge, Firefox**, and other browsers that load unpacked or store packages. It reduces YouTube Shorts UI on [https://www.youtube.com](https://www.youtube.com): sidebar link, reel/shelf rows, “Shorts”-titled sections, and Shorts-related tabs and filter chips.
+A [Manifest V3](https://developer.chrome.com/docs/extensions/mv3/) browser extension for **desktop Chrome, Edge, Firefox, and Firefox for Android**, and other browsers that load unpacked or store packages. It reduces YouTube Shorts and Playables UI on [https://www.youtube.com](https://www.youtube.com) and [https://m.youtube.com](https://m.youtube.com): sidebar links, reel/shelf rows, “Shorts”-titled sections, Shorts-related tabs and filter chips, and the Playables game shelf.
 
 **Maintainers & AI assistants:** See [AGENTS.md](AGENTS.md) for repository layout, settings schema, how to test in Chrome vs Firefox, and constraints when changing behavior.
 
@@ -37,16 +37,23 @@ Click the toolbar icon to open the popup. Each checkbox controls one kind of Sho
 | Hide Shorts reel / shelf rows | Hides `ytd-rich-shelf-renderer[is-shorts]` (current home Shorts row) and legacy `ytd-reel-shelf-renderer`. |
 | Hide sections titled “Shorts” | Hides rich sections whose heading is Shorts (SPA-friendly; uses a class applied after DOM checks). |
 | Hide Shorts tabs & filter chips | Hides Shorts tabs/titles where supported, chips linking to Shorts, and chips labeled Shorts when detected in the DOM. |
+| Hide Playables shelf & games | Hides the Playables game shelf on the homepage and search results, the sidebar Playables link, and individual game card elements. |
 
 Preferences are stored with **`storage.sync`** (`browser.storage.sync` / `chrome.storage.sync`): they sync when the browser’s account sync is enabled (subject to each engine’s limits); otherwise they stay on the local profile.
 
 ## Mobile (Android)
 
-- **Chrome for Android** does not support installing arbitrary extensions from the Chrome Web Store the way desktop Chrome does, so this extension does not apply there today.
-- **Firefox for Android** supports a curated set of extensions; shipping there would be a separate packaging and review path.
-- Some Chromium-based browsers (e.g. Kiwi) allow loading extensions manually for advanced users only.
-
-The primary supported surface is **desktop** `https://www.youtube.com/*` as declared in `manifest.json`.
+- **Firefox for Android** (version 121+) is fully supported. Install from
+  [addons.mozilla.org](https://addons.mozilla.org/) — search for
+  **"Say No to YouTube Shorts"** in Firefox for Android's Add-ons panel
+  (⋮ → Add-ons). The extension runs on both `youtube.com` and `m.youtube.com`.
+  The toolbar popup appears in the address bar; tap it to toggle settings.
+- **Chrome for Android** does not support loading arbitrary extensions from
+  the Chrome Web Store the way desktop Chrome does, so this extension does not
+  apply there.
+- **Kiwi Browser** (Android, Chromium-based) can sideload unpacked extensions
+  for advanced users — load unpacked via its extensions page the same way as
+  desktop Chrome.
 
 ## Privacy
 

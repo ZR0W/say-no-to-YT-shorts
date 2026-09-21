@@ -6,6 +6,7 @@ const DEFAULT_SETTINGS = {
   hideReelShelf: true,
   hideRichShortsSections: true,
   hideNavigationShorts: true,
+  hidePlayables: true,
 };
 
 let currentSettings = { ...DEFAULT_SETTINGS };
@@ -74,7 +75,17 @@ function ensureFallbackStyle() {
     ytd-rich-shelf-renderer[is-shorts].sntys-force-hide,
     ytd-rich-section-renderer.sntys-shorts-heading.sntys-force-hide,
     yt-chip-cloud-chip-renderer.sntys-force-hide,
-    ytd-chip-cloud-chip-renderer.sntys-force-hide {
+    ytd-chip-cloud-chip-renderer.sntys-force-hide,
+    ytm-reel-shelf-renderer.sntys-force-hide,
+    ytm-pivot-bar-item-renderer.sntys-force-hide,
+    ytm-compact-link-renderer.sntys-force-hide,
+    ytm-shorts-lockup-view-model.sntys-force-hide,
+    ytm-chip-cloud-chip-renderer.sntys-force-hide,
+    ytd-rich-shelf-renderer[is-playables].sntys-force-hide,
+    ytd-rich-section-renderer.sntys-force-hide,
+    ytd-mini-game-card-view-model.sntys-force-hide,
+    mini-game-card-view-model.sntys-force-hide,
+    ytd-game-card-renderer.sntys-force-hide {
       display: none !important;
     }
   `;
@@ -87,11 +98,13 @@ function applySettingsToDom(settings) {
   root.dataset.sntysHideReel = settings.hideReelShelf ? "1" : "0";
   root.dataset.sntysHideRich = settings.hideRichShortsSections ? "1" : "0";
   root.dataset.sntysHideNav = settings.hideNavigationShorts ? "1" : "0";
+  root.dataset.sntysHidePlayables = settings.hidePlayables ? "1" : "0";
   dbg("dataset flags", {
     sidebar: root.dataset.sntysHideSidebar,
     reel: root.dataset.sntysHideReel,
     rich: root.dataset.sntysHideRich,
     nav: root.dataset.sntysHideNav,
+    playables: root.dataset.sntysHidePlayables,
   });
 }
 
@@ -236,6 +249,9 @@ function applyForceHides() {
       setForcedHidden(chip, hideNav);
     });
 
+  applyMobileForceHides();
+  applyPlayablesHides();
+
   if (isDebug()) {
     dbg(
       "counts",
@@ -249,6 +265,95 @@ function applyForceHides() {
       document.querySelectorAll("ytd-mini-guide-entry-renderer").length,
       "miniGuide_hidden:",
       document.querySelectorAll("ytd-mini-guide-entry-renderer.sntys-force-hide").length
+    );
+  }
+}
+
+function applyPlayablesHides() {
+  const hide = currentSettings.hidePlayables;
+
+  document
+    .querySelectorAll("ytd-guide-entry-renderer, ytd-mini-guide-entry-renderer")
+    .forEach((el) => {
+      const isPlayables = Array.from(el.querySelectorAll("a[href]")).some((a) =>
+        a.getAttribute("href").startsWith("/playables")
+      );
+      if (isPlayables) setForcedHidden(el, hide);
+    });
+
+  document.querySelectorAll("ytd-rich-shelf-renderer[is-playables]").forEach((el) => {
+    setForcedHidden(el, hide);
+  });
+
+  // Outer section wrapper — avoids empty gap when inner shelf is hidden
+  document.querySelectorAll("ytd-rich-section-renderer:has([is-playables])").forEach((el) => {
+    setForcedHidden(el, hide);
+  });
+
+  document
+    .querySelectorAll(
+      "ytd-mini-game-card-view-model, mini-game-card-view-model, ytd-game-card-renderer"
+    )
+    .forEach((el) => {
+      setForcedHidden(el, hide);
+    });
+
+  if (isDebug()) {
+    dbg(
+      "playables counts",
+      "shelf[is-playables]:", document.querySelectorAll("ytd-rich-shelf-renderer[is-playables]").length,
+      "outerSection:", document.querySelectorAll("ytd-rich-section-renderer:has([is-playables])").length,
+      "gameCards:", document.querySelectorAll("ytd-mini-game-card-view-model, ytd-game-card-renderer").length,
+      "sidebarLinks_hidden:", document.querySelectorAll(
+        "ytd-guide-entry-renderer.sntys-force-hide, ytd-mini-guide-entry-renderer.sntys-force-hide"
+      ).length
+    );
+  }
+}
+
+function applyMobileForceHides() {
+  const hideReel = currentSettings.hideReelShelf;
+  const hideNav = currentSettings.hideNavigationShorts;
+  const hideSidebar = currentSettings.hideSidebarShorts;
+
+  document.querySelectorAll("ytm-pivot-bar-item-renderer").forEach((el) => {
+    const link = el.querySelector('a[href="/shorts"], a[href*="/feed/shorts"]');
+    const ariaEl = el.querySelector("[aria-label]");
+    const isShorts =
+      link ||
+      (ariaEl &&
+        ariaEl.getAttribute("aria-label").toLowerCase().includes("shorts"));
+    setForcedHidden(el, !!(hideNav && isShorts));
+  });
+
+  document.querySelectorAll("ytm-reel-shelf-renderer").forEach((el) => {
+    setForcedHidden(el, hideReel);
+  });
+
+  document.querySelectorAll("ytm-shorts-lockup-view-model").forEach((el) => {
+    setForcedHidden(el, hideReel);
+  });
+
+  document.querySelectorAll("ytm-compact-link-renderer").forEach((el) => {
+    const link = el.querySelector('a[href="/shorts"], a[href*="/feed/shorts"]');
+    const isShorts =
+      link || el.textContent.trim().toLowerCase() === "shorts";
+    setForcedHidden(el, !!(hideSidebar && isShorts));
+  });
+
+  document
+    .querySelectorAll("ytm-chip-cloud-chip-renderer.sntys-shorts-chip")
+    .forEach((chip) => {
+      setForcedHidden(chip, hideNav);
+    });
+
+  if (isDebug()) {
+    dbg(
+      "mobile counts",
+      "reelShelf:", document.querySelectorAll("ytm-reel-shelf-renderer").length,
+      "pivotBarItems:", document.querySelectorAll("ytm-pivot-bar-item-renderer").length,
+      "sidebarLinks:", document.querySelectorAll("ytm-compact-link-renderer").length,
+      "shortsCards:", document.querySelectorAll("ytm-shorts-lockup-view-model").length
     );
   }
 }
