@@ -34,16 +34,18 @@ body {
   align-items: flex-start;
   gap: 10px;
   margin-bottom: 10px;
-  cursor: pointer;
   line-height: 1.35;
 }
 
 .row input {
   margin-top: 2px;
   flex-shrink: 0;
+  cursor: pointer;
 }
 
-.row span {
+.row label {
+  flex: 1;
+  cursor: pointer;
   user-select: none;
 }
 

@@ -7,34 +7,34 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
-    <main class=”panel”>
-      <h1 class=”title”>YouTube visibility</h1>
-      <p class=”hint”>Turn off an option to show that UI again.</p>
+    <main class="panel">
+      <h1 class="title">YouTube visibility</h1>
+      <p class="hint">Turn off an option to show that UI again.</p>
 
-      <p class=”section-label”>Shorts</p>
-      <label class=”row”>
-        <input type=”checkbox” id=”hideSidebarShorts” />
-        <span>Hide sidebar Shorts link</span>
-      </label>
-      <label class=”row”>
-        <input type=”checkbox” id=”hideReelShelf” />
-        <span>Hide Shorts reel / shelf rows</span>
-      </label>
-      <label class=”row”>
-        <input type=”checkbox” id=”hideRichShortsSections” />
-        <span>Hide sections titled “Shorts”</span>
-      </label>
-      <label class=”row”>
-        <input type=”checkbox” id=”hideNavigationShorts” />
-        <span>Hide Shorts tabs &amp; filter chips</span>
-      </label>
+      <p class="section-label">Shorts</p>
+      <div class="row">
+        <input type="checkbox" id="hideSidebarShorts" />
+        <label for="hideSidebarShorts">Hide sidebar Shorts link</label>
+      </div>
+      <div class="row">
+        <input type="checkbox" id="hideReelShelf" />
+        <label for="hideReelShelf">Hide Shorts reel / shelf rows</label>
+      </div>
+      <div class="row">
+        <input type="checkbox" id="hideRichShortsSections" />
+        <label for="hideRichShortsSections">Hide sections titled "Shorts"</label>
+      </div>
+      <div class="row">
+        <input type="checkbox" id="hideNavigationShorts" />
+        <label for="hideNavigationShorts">Hide Shorts tabs &amp; filter chips</label>
+      </div>
 
-      <p class=”section-label”>Playables</p>
-      <p class=”section-hint”>Only visible on accounts where YouTube has enabled this feature.</p>
-      <label class=”row”>
-        <input type=”checkbox” id=”hidePlayables” />
-        <span>Hide Playables shelf &amp; games</span>
-      </label>
+      <p class="section-label">Playables</p>
+      <p class="section-hint">Only visible on accounts where YouTube has enabled this feature.</p>
+      <div class="row">
+        <input type="checkbox" id="hidePlayables" />
+        <label for="hidePlayables">Hide Playables shelf &amp; games</label>
+      </div>
     </main>
     <script src="popup.js"></script>
   </body>
